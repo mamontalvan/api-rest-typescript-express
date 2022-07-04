@@ -74,3 +74,5 @@
     Input: ID de la Tribu
 
 ```
+# Documentación EndPoints:
+https://documenter.getpostman.com/view/2432353/UzJFvJKy
