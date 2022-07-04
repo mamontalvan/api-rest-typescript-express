@@ -18,6 +18,7 @@ const repositorio_1 = __importDefault(require("../models/repositorio"));
 const tribu_1 = __importDefault(require("../models/tribu"));
 const sequelize_1 = require("sequelize");
 const json2csv_1 = require("json2csv");
+const organizacion_1 = __importDefault(require("../models/organizacion"));
 const obtenerRepositoriosPorTribu = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { idTribu } = req.params;
     const existeTribu = yield tribu_1.default.findByPk(idTribu);
@@ -50,6 +51,13 @@ const obtenerRepositoriosPorTribu = (req, res) => __awaiter(void 0, void 0, void
                         [sequelize_1.Op.gte]: 75,
                     },
                 }
+            }, {
+                model: tribu_1.default, as: "Tribu",
+                attributes: ['name'],
+                include: [{
+                        model: organizacion_1.default, as: "Organizacion",
+                        attributes: ['name'],
+                    },]
             },
         ],
     });
@@ -121,7 +129,8 @@ const getDownload = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             key: 'value',
             key2: 'value2'
         },
-        { key: 'value3',
+        {
+            key: 'value3',
             key2: 'value4'
         }
     ];
