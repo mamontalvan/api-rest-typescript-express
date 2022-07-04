@@ -42,8 +42,6 @@ export const obtenerRepositoriosPorTribu = async ( req:Request, res:Response ) =
                         [Op.gte]: 75,
                     },
                 }
-            },{
-                model: Tribu,
             },        
         ], 
       });

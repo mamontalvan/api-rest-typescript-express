@@ -50,8 +50,6 @@ const obtenerRepositoriosPorTribu = (req, res) => __awaiter(void 0, void 0, void
                         [sequelize_1.Op.gte]: 75,
                     },
                 }
-            }, {
-                model: tribu_1.default,
             },
         ],
     });
