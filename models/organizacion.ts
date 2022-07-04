@@ -25,5 +25,4 @@ const Organizacion = db.define('organizaciones', {
   });
 
 
-
 export default Organizacion;

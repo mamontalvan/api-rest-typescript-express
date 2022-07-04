@@ -10,6 +10,7 @@ export const getRepositorios = async ( req:Request, res:Response ) => {
             status
         }
     });
+
     res.status(200).json({
         msg: 'Lista de Repositorios',
         repositorios

@@ -135,3 +135,55 @@ export const validaIdRepositorio = async(idRepositorio:number) => {
 
     }
 }
+
+
+export const validaEstadosPermitidos = async(estado:number) => { 
+
+    if (!!estado) {
+
+        if(!isNaN(estado)){
+            
+            const estadosPermitidos:number[] = [ 1, 2 ]; 
+            const esPermitido:boolean = estadosPermitidos.includes(estado );
+
+            if( !esPermitido){
+    
+                throw new Error(`Sólo se permite registrar dos estados: 1(activo) ó 0(inactivo)`)
+    
+            }
+
+            return true;
+
+        }else{
+
+            throw new Error(`El status: ${ estado } debe ser un valor numérico`)
+        }
+
+    }
+}
+
+
+export const validaCodigosVerificacion = async(estadoVerificacion:number) => { 
+
+    if (!!estadoVerificacion) {
+
+        if(!isNaN(estadoVerificacion)){
+            
+            const estadosPermitidos:number[] = [ 604, 605, 606 ]; 
+            const esPermitido:boolean = estadosPermitidos.includes(estadoVerificacion );
+
+            if( !esPermitido){
+    
+                throw new Error(`Sólo se permite registrar dos estados: : E, D, A`)
+    
+            }
+
+            return true;
+
+        }else{
+
+            throw new Error(`El estado de verificación: ${ estadoVerificacion } debe ser un valor numérico`)
+        }
+
+    }
+}

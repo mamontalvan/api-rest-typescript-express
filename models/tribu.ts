@@ -34,6 +34,8 @@ const Tribu = db.define('tribus', {
     freezeTableName: true,
 });
 
+Organizacion.hasMany(Tribu);
 Tribu.belongsTo(Organizacion, { as: 'Organizacion', foreignKey:'organizacionId' });
+
 
 export default Tribu;

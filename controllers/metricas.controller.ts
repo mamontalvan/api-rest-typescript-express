@@ -1,13 +1,23 @@
 import { Request, Response } from 'express';
 import Metrica from '../models/metrica';
+import Repositorio from '../models/repositorio';
 
-export const getMetricas = async ( req:Request, res:Response ) => {
+export const obtenerRepositoriosPorTribu = async ( req:Request, res:Response ) => {
 
-    const metricas = await Metrica.findAll();
+    const { idTribu } = req.params;
+    console.log( 'ID_TRIBU', { idTribu } );
+    const datosRespositorio = await Repositorio.findAll({
+        where: {
+            tribuId: idTribu
+        },
+        include: Metrica
+      });
 
+      console.log({datosRespositorio});
+      
     res.status(200).json({
         msg: 'Métricas',
-        metricas
+        datosRespositorio
     });
 
 };

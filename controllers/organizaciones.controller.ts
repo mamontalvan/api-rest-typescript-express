@@ -117,7 +117,7 @@ export const deleteOrganizacion = async ( req:Request, res:Response ) => {
         });
     }
 
-    await organizacion.update({ status: false });
+    await organizacion.update({ status: 0 });
     //Para la eliminación física descomentar la siguiente línea
     // await organizacion.destroy();
 

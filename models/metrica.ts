@@ -10,7 +10,6 @@ const Metrica = db.define('metricas', {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        field:'id_repository',
         references: {
             model: Repositorio,
             key: 'id'
@@ -47,6 +46,7 @@ const Metrica = db.define('metricas', {
     freezeTableName: true,
 });
 
+Repositorio.hasOne(Metrica );
 Metrica.belongsTo(Repositorio, { as: 'Repositorio', foreignKey:'repositorId' });
 
 

@@ -4,7 +4,6 @@ import { Sequelize } from 'sequelize-cockroachdb';
 import Tribu from './tribu';
 
 
-
 const Repositorio = db.define('repositorios', {
 
     id: {
@@ -32,10 +31,15 @@ const Repositorio = db.define('repositorios', {
         allowNull: false,
         defaultValue:'A'
     },
+    codigoVerificacion: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 605
+    },    
     tribuId: {
         type: DataTypes.INTEGER,
         references: {
-            model: Tribu ,
+            model: Tribu,
             key: 'id'
         }
     },    
@@ -45,8 +49,8 @@ const Repositorio = db.define('repositorios', {
     freezeTableName: true,
 });
 
+Tribu.hasMany(Repositorio );
 Repositorio.belongsTo(Tribu, { as: 'Tribu', foreignKey:'tribuId' });
-
 
 
 export default Repositorio;

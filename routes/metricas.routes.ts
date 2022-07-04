@@ -1,15 +1,23 @@
 import { Router } from 'express';
 import { body, check } from 'express-validator';
 import { validarCampos } from '../middlewares/validaCampos';
-import { getMetricas, postMetrica, putMetrica } from '../controllers/metricas.controller';
-import { validaIdRepositorio } from '../helpers/db-validators';
+import { postMetrica, putMetrica, obtenerRepositoriosPorTribu } from '../controllers/metricas.controller';
+import { validaIdRepositorio, validaIdTribu } from '../helpers/db-validators';
 
 
 const router =  Router();
 
 
+router.get('/:idTribu', 
+        [
+            check('tribuId').custom((tribuId) => validaIdTribu(tribuId)),
+            body('repositorId').custom((repositorId) => validaIdRepositorio(repositorId)),
+            validarCampos
+        ],
+        obtenerRepositoriosPorTribu );
 
-//Registro de un Métrica
+
+//Registrar las métricas de un repositorio
 router.post('/', 
         [
             body('repositorId').custom((repositorId) => validaIdRepositorio(repositorId)),
@@ -17,7 +25,7 @@ router.post('/',
         ],
         postMetrica );
 
-//Actualizar datos de la métrica de un determinado repositorio
+//Actualizar datos deuna métrica
 router.put('/:id', 
         [
             body('repositorId').custom((repositorId) => validaIdRepositorio(repositorId)),
