@@ -20,7 +20,7 @@ export const obtenerRepositoriosPorTribu = async (req: Request, res: Response) =
     }
 
     const repositorios = await Repositorio.findAll({
-         raw: true, 
+        raw: true, 
         attributes: ['id',
             'name',
             [Sequelize.literal("CASE WHEN \"state\" = 'E' THEN 'Enable' WHEN \"state\" = 'D' THEN 'Disable' ELSE 'Archived' END"), 'state'],

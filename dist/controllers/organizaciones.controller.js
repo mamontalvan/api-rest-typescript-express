@@ -14,16 +14,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteOrganizacion = exports.putOrganizacion = exports.postOrganizacion = exports.getOrganizacionPorId = exports.getOrganizaciones = void 0;
 const organizacion_1 = __importDefault(require("../models/organizacion"));
+const sequelize_1 = require("sequelize");
 const getOrganizaciones = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const status = 1;
-    // const organizaciones = await Organizacion.findAll();
     const organizaciones = yield organizacion_1.default.findAll({
+        raw: true,
+        attributes: ['id', 'name',
+            [sequelize_1.Sequelize.literal("CASE WHEN \"status\" = '1' THEN 'Enable' ELSE 'Disable' END "), 'status'],
+        ],
         where: {
-            status
+            status: 1
         }
     });
     res.status(200).json({
-        msg: 'Lista de Organizaciones',
         organizaciones
     });
 });

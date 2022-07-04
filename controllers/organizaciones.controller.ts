@@ -1,17 +1,20 @@
 import { Request, Response } from 'express';
 import Organizacion from '../models/organizacion';
+import { Op, Sequelize } from 'sequelize';
 
 export const getOrganizaciones = async ( req:Request, res:Response ) => {
 
-    const status = 1;
-    // const organizaciones = await Organizacion.findAll();
-    const organizaciones = await Organizacion.findAll({
+    const organizaciones:object = await Organizacion.findAll({
+        raw: true,
+        attributes: ['id','name',
+        [Sequelize.literal("CASE WHEN \"status\" = '1' THEN 'Enable' ELSE 'Disable' END "), 'status'],
+        ],
         where:{
-            status
+            status:1
         }
     });
+
     res.status(200).json({
-        msg: 'Lista de Organizaciones',
         organizaciones
     });
 

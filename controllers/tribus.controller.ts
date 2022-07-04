@@ -1,18 +1,24 @@
 import { Request, Response } from 'express';
 import Organizacion from '../models/organizacion';
 import Tribu from '../models/tribu';
+import { Op, Sequelize } from 'sequelize';
 
 export const getTribus = async ( req:Request, res:Response ) => {
 
-    const status = 1;
-    // const organizaciones = await Organizacion.findAll();
     const tribus = await Tribu.findAll({
+        raw: true,
+        attributes: ['id',
+                    'name',
+                    // [Sequelize.literal("CASE WHEN \"status\" = '1' THEN 'Enable' ELSE 'Disable' END "), 'status'],
+                ],
         where:{
-            status
-        }
+            status: 1
+        },include: [{
+            model: Organizacion, as: "Organizacion",
+            attributes: ['id', 'name'],
+        }]
     });
     res.status(200).json({
-        msg: 'Lista de Tribus',
         tribus
     });
 

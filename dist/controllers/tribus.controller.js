@@ -13,17 +13,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTribu = exports.putTribu = exports.postTribu = exports.getTribuPorId = exports.getTribus = void 0;
+const organizacion_1 = __importDefault(require("../models/organizacion"));
 const tribu_1 = __importDefault(require("../models/tribu"));
 const getTribus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const status = 1;
-    // const organizaciones = await Organizacion.findAll();
     const tribus = yield tribu_1.default.findAll({
+        raw: true,
+        attributes: ['id',
+            'name',
+            // [Sequelize.literal("CASE WHEN \"status\" = '1' THEN 'Enable' ELSE 'Disable' END "), 'status'],
+        ],
         where: {
-            status
-        }
+            status: 1
+        }, include: [{
+                model: organizacion_1.default, as: "Organizacion",
+                attributes: ['id', 'name'],
+            }]
     });
     res.status(200).json({
-        msg: 'Lista de Tribus',
         tribus
     });
 });
