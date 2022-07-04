@@ -7,7 +7,7 @@ const sequelize_1 = require("sequelize");
 const connection_1 = __importDefault(require("../db/connection"));
 const repositorio_1 = __importDefault(require("./repositorio"));
 const Metrica = connection_1.default.define('metricas', {
-    repositorId: {
+    repositorioId: {
         type: sequelize_1.DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
@@ -45,6 +45,6 @@ const Metrica = connection_1.default.define('metricas', {
     freezeTableName: true,
 });
 repositorio_1.default.hasOne(Metrica);
-Metrica.belongsTo(repositorio_1.default, { as: 'Repositorio', foreignKey: 'repositorId' });
+Metrica.belongsTo(repositorio_1.default, { as: 'Repositorio', foreignKey: 'repositorioId' });
 exports.default = Metrica;
 //# sourceMappingURL=metrica.js.map

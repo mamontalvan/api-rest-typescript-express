@@ -9,15 +9,15 @@
   "repositories": [
     {
       "id": 1,
-      "state": 604
+      "codigoVerificacion": 604
     },
     {
       "id": 2,
-      "state": 605
+      "codigoVerificacion": 605
     },
     {
       "id": 3,
-      "state": 606
+      "codigoVerificacion": 606
     }
   ]
 }

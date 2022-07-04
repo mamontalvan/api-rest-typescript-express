@@ -11,7 +11,7 @@ const router =  Router();
 router.get('/:idTribu', 
         [
             check('tribuId').custom((tribuId) => validaIdTribu(tribuId)),
-            body('repositorId').custom((repositorId) => validaIdRepositorio(repositorId)),
+            body('repositorioId').custom((repositorioId) => validaIdRepositorio(repositorioId)),
             validarCampos
         ],
         obtenerRepositoriosPorTribu );
@@ -20,7 +20,7 @@ router.get('/:idTribu',
 //Registrar las métricas de un repositorio
 router.post('/', 
         [
-            body('repositorId').custom((repositorId) => validaIdRepositorio(repositorId)),
+            body('repositorioId').custom((repositorioId) => validaIdRepositorio(repositorioId)),
             validarCampos
         ],
         postMetrica );
@@ -28,7 +28,7 @@ router.post('/',
 //Actualizar datos deuna métrica
 router.put('/:id', 
         [
-            body('repositorId').custom((repositorId) => validaIdRepositorio(repositorId)),
+            body('repositorioId').custom((repositorioId) => validaIdRepositorio(repositorioId)),
             validarCampos
         ],
         putMetrica );

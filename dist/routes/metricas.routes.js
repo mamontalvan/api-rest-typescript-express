@@ -8,17 +8,17 @@ const db_validators_1 = require("../helpers/db-validators");
 const router = (0, express_1.Router)();
 router.get('/:idTribu', [
     (0, express_validator_1.check)('tribuId').custom((tribuId) => (0, db_validators_1.validaIdTribu)(tribuId)),
-    (0, express_validator_1.body)('repositorId').custom((repositorId) => (0, db_validators_1.validaIdRepositorio)(repositorId)),
+    (0, express_validator_1.body)('repositorioId').custom((repositorioId) => (0, db_validators_1.validaIdRepositorio)(repositorioId)),
     validaCampos_1.validarCampos
 ], metricas_controller_1.obtenerRepositoriosPorTribu);
 //Registrar las métricas de un repositorio
 router.post('/', [
-    (0, express_validator_1.body)('repositorId').custom((repositorId) => (0, db_validators_1.validaIdRepositorio)(repositorId)),
+    (0, express_validator_1.body)('repositorioId').custom((repositorioId) => (0, db_validators_1.validaIdRepositorio)(repositorioId)),
     validaCampos_1.validarCampos
 ], metricas_controller_1.postMetrica);
 //Actualizar datos deuna métrica
 router.put('/:id', [
-    (0, express_validator_1.body)('repositorId').custom((repositorId) => (0, db_validators_1.validaIdRepositorio)(repositorId)),
+    (0, express_validator_1.body)('repositorioId').custom((repositorioId) => (0, db_validators_1.validaIdRepositorio)(repositorioId)),
     validaCampos_1.validarCampos
 ], metricas_controller_1.putMetrica);
 exports.default = router;

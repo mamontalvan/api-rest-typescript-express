@@ -15,20 +15,55 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.putMetrica = exports.postMetrica = exports.obtenerRepositoriosPorTribu = void 0;
 const metrica_1 = __importDefault(require("../models/metrica"));
 const repositorio_1 = __importDefault(require("../models/repositorio"));
+const tribu_1 = __importDefault(require("../models/tribu"));
+const sequelize_1 = require("sequelize");
 const obtenerRepositoriosPorTribu = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { idTribu } = req.params;
-    console.log('ID_TRIBU', { idTribu });
+    const existeTribu = yield tribu_1.default.findByPk(idTribu);
+    if (!existeTribu) {
+        return res.status(400).json({
+            msg: `La Tribu  ${idTribu} no se encuentra registrada`
+        });
+    }
     const datosRespositorio = yield repositorio_1.default.findAll({
+        attributes: ['id',
+            'name',
+            'createTime',
+            [sequelize_1.Sequelize.literal("CASE WHEN \"state\" = 'E' THEN 'Enable' WHEN \"state\" = 'D' THEN 'Disable' ELSE 'Archived' END"), 'state'],
+            'codigoVerificacion',
+            [sequelize_1.Sequelize.literal("CASE WHEN  \"codigoVerificacion\" = 604 THEN 'Verificado' WHEN  \"codigoVerificacion\" = 605 THEN 'En Espera' ELSE 'Aprobado' END"), 'codigoVerificacion'],
+        ],
         where: {
-            tribuId: idTribu
+            tribuId: idTribu,
+            state: 'E',
+            create_time: {
+                [sequelize_1.Op.gte]: '2022/01/01',
+            }
         },
-        include: metrica_1.default
+        include: [
+            {
+                model: metrica_1.default,
+                attributes: ['coverage', 'bugs', 'vulnerabilities', 'hotspot', 'codeSmeell'],
+                where: {
+                    coverage: {
+                        [sequelize_1.Op.gte]: 75,
+                    },
+                }
+            },
+        ],
     });
-    console.log({ datosRespositorio });
-    res.status(200).json({
-        msg: 'Métricas',
-        datosRespositorio
-    });
+    if (!(datosRespositorio.length === 0)) {
+        console.log('dentro');
+        res.status(200).json({
+            msg: 'Respositorios',
+            datosRespositorio
+        });
+    }
+    else {
+        return res.status(404).json({
+            msg: `La Tribu no tiene repositorios que cumplan con la cobertura necesaria`,
+        });
+    }
 });
 exports.obtenerRepositoriosPorTribu = obtenerRepositoriosPorTribu;
 const postMetrica = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

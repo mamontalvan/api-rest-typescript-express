@@ -6,7 +6,7 @@ import Repositorio from './repositorio';
 
 const Metrica = db.define('metricas', {
 
-    repositorId: {
+    repositorioId: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
@@ -47,7 +47,8 @@ const Metrica = db.define('metricas', {
 });
 
 Repositorio.hasOne(Metrica );
-Metrica.belongsTo(Repositorio, { as: 'Repositorio', foreignKey:'repositorId' });
+Metrica.belongsTo(Repositorio, { as: 'Repositorio', foreignKey:'repositorioId' });
+
 
 
 export default Metrica;

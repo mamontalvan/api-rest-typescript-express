@@ -1,24 +1,64 @@
 import { Request, Response } from 'express';
 import Metrica from '../models/metrica';
 import Repositorio from '../models/repositorio';
+import Tribu from '../models/tribu';
+import { Op, Sequelize } from 'sequelize';
+
 
 export const obtenerRepositoriosPorTribu = async ( req:Request, res:Response ) => {
 
     const { idTribu } = req.params;
-    console.log( 'ID_TRIBU', { idTribu } );
+
+    const existeTribu = await Tribu.findByPk( idTribu );
+
+    if (!existeTribu) {
+        return res.status(400).json({
+            msg: `La Tribu  ${ idTribu } no se encuentra registrada`
+        })
+    }
+    
     const datosRespositorio = await Repositorio.findAll({
+        attributes: ['id', 
+                    'name', 
+                    'createTime',                    
+                    [ Sequelize.literal("CASE WHEN \"state\" = 'E' THEN 'Enable' WHEN \"state\" = 'D' THEN 'Disable' ELSE 'Archived' END"), 'state'],
+                    'codigoVerificacion',
+                    [ Sequelize.literal("CASE WHEN  \"codigoVerificacion\" = 604 THEN 'Verificado' WHEN  \"codigoVerificacion\" = 605 THEN 'En Espera' ELSE 'Aprobado' END"), 'codigoVerificacion'],
+                ],
         where: {
-            tribuId: idTribu
+            tribuId: idTribu,
+            state: 'E',
+            create_time: {
+                [Op.gte]: '2022/01/01',
+              }
         },
-        include: Metrica
+        include: [
+            {
+                model: Metrica,
+                attributes: ['coverage', 'bugs', 'vulnerabilities', 'hotspot', 'codeSmeell'],
+                where: { 
+                    coverage: {
+                        [Op.gte]: 75,
+                    },
+                }
+            },            
+        ], 
       });
 
-      console.log({datosRespositorio});
-      
-    res.status(200).json({
-        msg: 'Métricas',
-        datosRespositorio
-    });
+    if( !( datosRespositorio.length === 0 ) ){
+        console.log('dentro');
+        res.status(200).json({
+            msg: 'Respositorios',
+            datosRespositorio
+        });
+    }else{
+
+        return res.status(404).json({
+            msg: `La Tribu no tiene repositorios que cumplan con la cobertura necesaria`,
+        });
+
+    }
+
 
 };
 
