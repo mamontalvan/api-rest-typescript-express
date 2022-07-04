@@ -18,10 +18,12 @@ const getRepositorios = (req, res) => __awaiter(void 0, void 0, void 0, function
     const status = 'A';
     // const organizaciones = await Organizacion.findAll();
     const repositorios = yield repositorio_1.default.findAll({
+        attributes: ['id', 'codigoVerificacion'],
         where: {
             status
         }
     });
+    console.log(repositorios);
     res.status(200).json({
         msg: 'Lista de Repositorios',
         repositorios

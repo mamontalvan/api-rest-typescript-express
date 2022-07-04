@@ -6,11 +6,14 @@ export const getRepositorios = async ( req:Request, res:Response ) => {
     const status:string = 'A';
     // const organizaciones = await Organizacion.findAll();
     const repositorios = await Repositorio.findAll({
+        attributes: ['id', 'codigoVerificacion'],
         where:{
             status
         }
     });
 
+    console.log(repositorios);
+    
     res.status(200).json({
         msg: 'Lista de Repositorios',
         repositorios
