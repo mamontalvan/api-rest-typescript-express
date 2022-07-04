@@ -36,7 +36,7 @@ const Repositorio = db.define('repositorios', {
         allowNull: false,
         defaultValue: 605
     },    
-    tribuId: {
+    tribusId: {
         type: DataTypes.INTEGER,
         references: {
             model: Tribu,
@@ -49,8 +49,9 @@ const Repositorio = db.define('repositorios', {
     freezeTableName: true,
 });
 
-Tribu.hasMany(Repositorio );
-Repositorio.belongsTo(Tribu, { as: 'Tribu', foreignKey:'tribuId' });
+Tribu.hasMany(Repositorio);
+Repositorio.belongsTo(Tribu, { as: 'Tribu', foreignKey:'tribusId' });
+
 
 
 export default Repositorio;

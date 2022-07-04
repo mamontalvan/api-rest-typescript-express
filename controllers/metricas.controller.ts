@@ -3,6 +3,7 @@ import Metrica from '../models/metrica';
 import Repositorio from '../models/repositorio';
 import Tribu from '../models/tribu';
 import { Op, Sequelize } from 'sequelize';
+import { Parser } from 'json2csv';
 
 
 export const obtenerRepositoriosPorTribu = async ( req:Request, res:Response ) => {
@@ -26,7 +27,7 @@ export const obtenerRepositoriosPorTribu = async ( req:Request, res:Response ) =
                     [ Sequelize.literal("CASE WHEN  \"codigoVerificacion\" = 604 THEN 'Verificado' WHEN  \"codigoVerificacion\" = 605 THEN 'En Espera' ELSE 'Aprobado' END"), 'codigoVerificacion'],
                 ],
         where: {
-            tribuId: idTribu,
+            tribusId: idTribu,
             state: 'E',
             create_time: {
                 [Op.gte]: '2022/01/01',
@@ -41,12 +42,14 @@ export const obtenerRepositoriosPorTribu = async ( req:Request, res:Response ) =
                         [Op.gte]: 75,
                     },
                 }
-            },            
+            },{
+                model: Tribu,
+            },        
         ], 
       });
 
     if( !( datosRespositorio.length === 0 ) ){
-        console.log('dentro');
+
         res.status(200).json({
             msg: 'Respositorios',
             datosRespositorio
@@ -63,7 +66,7 @@ export const obtenerRepositoriosPorTribu = async ( req:Request, res:Response ) =
 };
 
 
-
+//Registrar métricas
 export const postMetrica = async( req:Request, res:Response ) => {
 
     const { repositorId } = req.body;
@@ -97,7 +100,7 @@ export const postMetrica = async( req:Request, res:Response ) => {
 };
 
 
-
+//Actualizar datos de la métrica
 export const putMetrica = async( req:Request, res:Response ) => {
 
     const { id } = req.params;
@@ -129,4 +132,30 @@ export const putMetrica = async( req:Request, res:Response ) => {
 
 };
 
+
+export const getDownload = async( req:Request, res:Response ) => {
+
+    const data = [
+        {
+            key: 'value', 
+            key2: 'value2' 
+        },
+        {   key: 'value3', 
+            key2: 'value4' 
+        }
+        ];
+    
+    const fields = ['key', 'key2'];
+    const fileName = 'prueba.csv';
+    const json2csv = new Parser({ fields });
+    const csv = json2csv.parse(data);
+
+    res.header('Content-Type', 'text/csv');
+
+    res.attachment(fileName);
+
+    return res.send(csv);
+
+
+};
 

@@ -45,12 +45,12 @@ export const postRepositorio = async( req:Request, res:Response ) => {
 
     const name:string = req.body.name.toUpperCase();
     const state:number = req.body.state;
-    const tribuId:number = req.body.tribuId;
+    const tribusId:number = req.body.tribuId;
 
     
     try {      
 
-        const repositorio = await Repositorio.create( { name, state, tribuId } ); 
+        const repositorio = await Repositorio.create( { name, state, tribusId } ); 
         await repositorio.save();
 
         res.status(200).json({

@@ -43,12 +43,12 @@ export const postTribu = async ( req:Request, res:Response ) => {
 
     const name:string = req.body.name.toUpperCase();
     const status:number = req.body.status;
-    const organizacionId:number = req.body.organizacionId;
+    const organizacioneId:number = req.body.organizacionId;
 
     
     try {      
 
-        const tribu = await Tribu.create( { name, status, organizacionId } ); 
+        const tribu = await Tribu.create( { name, status, organizacioneId } ); 
         await tribu.save();
 
         res.status(200).json({
@@ -74,7 +74,7 @@ export const putTribu = async( req:Request, res:Response ) => {
     const { id } = req.params;
     const name:string = req.body.name.toUpperCase();
     const status:number = req.body.status;
-    const organizacionId:number = req.body.organizacionId;
+    const organizacioneId:number = req.body.organizacionId;
 
     try {
 
@@ -85,7 +85,7 @@ export const putTribu = async( req:Request, res:Response ) => {
             });
         }
 
-        await tribu.update( { name, status, organizacionId } );
+        await tribu.update( { name, status, organizacioneId } );
 
         res.status(200).json({
             msg: 'Tribu Atualizada',

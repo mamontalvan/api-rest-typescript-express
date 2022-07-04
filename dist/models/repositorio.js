@@ -38,7 +38,7 @@ const Repositorio = connection_1.default.define('repositorios', {
         allowNull: false,
         defaultValue: 605
     },
-    tribuId: {
+    tribusId: {
         type: sequelize_1.DataTypes.INTEGER,
         references: {
             model: tribu_1.default,
@@ -49,6 +49,6 @@ const Repositorio = connection_1.default.define('repositorios', {
     freezeTableName: true,
 });
 tribu_1.default.hasMany(Repositorio);
-Repositorio.belongsTo(tribu_1.default, { as: 'Tribu', foreignKey: 'tribuId' });
+Repositorio.belongsTo(tribu_1.default, { as: 'Tribu', foreignKey: 'tribusId' });
 exports.default = Repositorio;
 //# sourceMappingURL=repositorio.js.map

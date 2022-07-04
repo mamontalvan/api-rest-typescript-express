@@ -20,7 +20,7 @@ const Tribu = db.define('tribus', {
         allowNull: false,
         defaultValue: 1
     },
-    organizacionId: {
+    organizacioneId: {
         type: DataTypes.INTEGER,
         references: {
             model: Organizacion,
@@ -35,7 +35,8 @@ const Tribu = db.define('tribus', {
 });
 
 Organizacion.hasMany(Tribu);
-Tribu.belongsTo(Organizacion, { as: 'Organizacion', foreignKey:'organizacionId' });
+Tribu.belongsTo(Organizacion, { as: 'Organizacion', foreignKey:'organizacioneId' });
+
 
 
 export default Tribu;

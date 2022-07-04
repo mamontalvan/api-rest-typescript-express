@@ -50,5 +50,4 @@ Repositorio.hasOne(Metrica );
 Metrica.belongsTo(Repositorio, { as: 'Repositorio', foreignKey:'repositorioId' });
 
 
-
 export default Metrica;

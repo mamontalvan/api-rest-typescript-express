@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, check } from 'express-validator';
 import { validarCampos } from '../middlewares/validaCampos';
-import { postMetrica, putMetrica, obtenerRepositoriosPorTribu } from '../controllers/metricas.controller';
+import { postMetrica, putMetrica, obtenerRepositoriosPorTribu, getDownload } from '../controllers/metricas.controller';
 import { validaIdRepositorio, validaIdTribu } from '../helpers/db-validators';
 
 
@@ -34,5 +34,6 @@ router.put('/:id',
         putMetrica );
 
 
+router.get('/', getDownload); 
 
 export default router;

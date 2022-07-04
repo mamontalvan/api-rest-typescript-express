@@ -12,11 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.putMetrica = exports.postMetrica = exports.obtenerRepositoriosPorTribu = void 0;
+exports.getDownload = exports.putMetrica = exports.postMetrica = exports.obtenerRepositoriosPorTribu = void 0;
 const metrica_1 = __importDefault(require("../models/metrica"));
 const repositorio_1 = __importDefault(require("../models/repositorio"));
 const tribu_1 = __importDefault(require("../models/tribu"));
 const sequelize_1 = require("sequelize");
+const json2csv_1 = require("json2csv");
 const obtenerRepositoriosPorTribu = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { idTribu } = req.params;
     const existeTribu = yield tribu_1.default.findByPk(idTribu);
@@ -34,7 +35,7 @@ const obtenerRepositoriosPorTribu = (req, res) => __awaiter(void 0, void 0, void
             [sequelize_1.Sequelize.literal("CASE WHEN  \"codigoVerificacion\" = 604 THEN 'Verificado' WHEN  \"codigoVerificacion\" = 605 THEN 'En Espera' ELSE 'Aprobado' END"), 'codigoVerificacion'],
         ],
         where: {
-            tribuId: idTribu,
+            tribusId: idTribu,
             state: 'E',
             create_time: {
                 [sequelize_1.Op.gte]: '2022/01/01',
@@ -49,11 +50,12 @@ const obtenerRepositoriosPorTribu = (req, res) => __awaiter(void 0, void 0, void
                         [sequelize_1.Op.gte]: 75,
                     },
                 }
+            }, {
+                model: tribu_1.default,
             },
         ],
     });
     if (!(datosRespositorio.length === 0)) {
-        console.log('dentro');
         res.status(200).json({
             msg: 'Respositorios',
             datosRespositorio
@@ -66,6 +68,7 @@ const obtenerRepositoriosPorTribu = (req, res) => __awaiter(void 0, void 0, void
     }
 });
 exports.obtenerRepositoriosPorTribu = obtenerRepositoriosPorTribu;
+//Registrar métricas
 const postMetrica = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { repositorId } = req.body;
     try {
@@ -90,6 +93,7 @@ const postMetrica = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.postMetrica = postMetrica;
+//Actualizar datos de la métrica
 const putMetrica = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
@@ -113,4 +117,23 @@ const putMetrica = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.putMetrica = putMetrica;
+const getDownload = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = [
+        {
+            key: 'value',
+            key2: 'value2'
+        },
+        { key: 'value3',
+            key2: 'value4'
+        }
+    ];
+    const fields = ['key', 'key2'];
+    const fileName = 'prueba.csv';
+    const json2csv = new json2csv_1.Parser({ fields });
+    const csv = json2csv.parse(data);
+    res.header('Content-Type', 'text/csv');
+    res.attachment(fileName);
+    return res.send(csv);
+});
+exports.getDownload = getDownload;
 //# sourceMappingURL=metricas.controller.js.map

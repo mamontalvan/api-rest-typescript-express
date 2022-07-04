@@ -46,9 +46,9 @@ exports.getTribuPorId = getTribuPorId;
 const postTribu = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const name = req.body.name.toUpperCase();
     const status = req.body.status;
-    const organizacionId = req.body.organizacionId;
+    const organizacioneId = req.body.organizacionId;
     try {
-        const tribu = yield tribu_1.default.create({ name, status, organizacionId });
+        const tribu = yield tribu_1.default.create({ name, status, organizacioneId });
         yield tribu.save();
         res.status(200).json({
             msg: 'Tribu Creada',
@@ -67,7 +67,7 @@ const putTribu = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const name = req.body.name.toUpperCase();
     const status = req.body.status;
-    const organizacionId = req.body.organizacionId;
+    const organizacioneId = req.body.organizacionId;
     try {
         const tribu = yield tribu_1.default.findByPk(id);
         if (!tribu) {
@@ -75,7 +75,7 @@ const putTribu = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 msg: `No existe una Tribu con ID: ${id}`,
             });
         }
-        yield tribu.update({ name, status, organizacionId });
+        yield tribu.update({ name, status, organizacioneId });
         res.status(200).json({
             msg: 'Tribu Atualizada',
             tribu

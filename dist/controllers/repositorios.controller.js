@@ -47,9 +47,9 @@ exports.getRepositorioPorId = getRepositorioPorId;
 const postRepositorio = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const name = req.body.name.toUpperCase();
     const state = req.body.state;
-    const tribuId = req.body.tribuId;
+    const tribusId = req.body.tribuId;
     try {
-        const repositorio = yield repositorio_1.default.create({ name, state, tribuId });
+        const repositorio = yield repositorio_1.default.create({ name, state, tribusId });
         yield repositorio.save();
         res.status(200).json({
             msg: 'Repositorio Creado',

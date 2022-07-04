@@ -21,7 +21,7 @@ const Tribu = connection_1.default.define('tribus', {
         allowNull: false,
         defaultValue: 1
     },
-    organizacionId: {
+    organizacioneId: {
         type: sequelize_1.DataTypes.INTEGER,
         references: {
             model: organizacion_1.default,
@@ -32,6 +32,6 @@ const Tribu = connection_1.default.define('tribus', {
     freezeTableName: true,
 });
 organizacion_1.default.hasMany(Tribu);
-Tribu.belongsTo(organizacion_1.default, { as: 'Organizacion', foreignKey: 'organizacionId' });
+Tribu.belongsTo(organizacion_1.default, { as: 'Organizacion', foreignKey: 'organizacioneId' });
 exports.default = Tribu;
 //# sourceMappingURL=tribu.js.map
