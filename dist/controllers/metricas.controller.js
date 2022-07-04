@@ -27,10 +27,10 @@ const obtenerRepositoriosPorTribu = (req, res) => __awaiter(void 0, void 0, void
             msg: `La Tribu  ${idTribu} no se encuentra registrada`
         });
     }
-    const datosRespositorio = yield repositorio_1.default.findAll({
+    const repositorios = yield repositorio_1.default.findAll({
+        raw: true,
         attributes: ['id',
             'name',
-            'createTime',
             [sequelize_1.Sequelize.literal("CASE WHEN \"state\" = 'E' THEN 'Enable' WHEN \"state\" = 'D' THEN 'Disable' ELSE 'Archived' END"), 'state'],
             'codigoVerificacion',
             [sequelize_1.Sequelize.literal("CASE WHEN  \"codigoVerificacion\" = 604 THEN 'Verificado' WHEN  \"codigoVerificacion\" = 605 THEN 'En Espera' ELSE 'Aprobado' END"), 'codigoVerificacion'],
@@ -53,18 +53,18 @@ const obtenerRepositoriosPorTribu = (req, res) => __awaiter(void 0, void 0, void
                 }
             }, {
                 model: tribu_1.default, as: "Tribu",
-                attributes: ['name'],
+                attributes: [['name', 'tribu']],
                 include: [{
                         model: organizacion_1.default, as: "Organizacion",
-                        attributes: ['name'],
+                        attributes: [['name', 'Organizacion']],
                     },]
             },
         ],
     });
-    if (!(datosRespositorio.length === 0)) {
+    console.log(repositorios);
+    if (!(repositorios.length === 0)) {
         res.status(200).json({
-            msg: 'Respositorios',
-            datosRespositorio
+            repositorios
         });
     }
     else {

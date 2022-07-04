@@ -19,10 +19,10 @@ export const obtenerRepositoriosPorTribu = async (req: Request, res: Response) =
         })
     }
 
-    const datosRespositorio = await Repositorio.findAll({
+    const repositorios = await Repositorio.findAll({
+         raw: true, 
         attributes: ['id',
             'name',
-            'createTime',
             [Sequelize.literal("CASE WHEN \"state\" = 'E' THEN 'Enable' WHEN \"state\" = 'D' THEN 'Disable' ELSE 'Archived' END"), 'state'],
             'codigoVerificacion',
             [Sequelize.literal("CASE WHEN  \"codigoVerificacion\" = 604 THEN 'Verificado' WHEN  \"codigoVerificacion\" = 605 THEN 'En Espera' ELSE 'Aprobado' END"), 'codigoVerificacion'],
@@ -45,20 +45,20 @@ export const obtenerRepositoriosPorTribu = async (req: Request, res: Response) =
                 }
             }, {
                 model: Tribu, as: "Tribu",
-                attributes: ['name'],
+                attributes: [['name', 'tribu']],
                 include: [{
                     model: Organizacion, as: "Organizacion",
-                    attributes: ['name'],
+                    attributes: [['name', 'Organizacion']],
                 },]
             },
         ],
     });
 
-    if (!(datosRespositorio.length === 0)) {
+console.log(repositorios);
+    if (!(repositorios.length === 0)) {
 
         res.status(200).json({
-            msg: 'Respositorios',
-            datosRespositorio
+            repositorios
         });
     } else {
 
