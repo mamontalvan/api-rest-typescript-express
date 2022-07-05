@@ -12,13 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDownload = exports.putMetrica = exports.postMetrica = exports.obtenerRepositoriosPorTribu = void 0;
+exports.putMetrica = exports.postMetrica = exports.obtenerRepositoriosPorTribu = void 0;
 const metrica_1 = __importDefault(require("../models/metrica"));
-const repositorio_1 = __importDefault(require("../models/repositorio"));
 const tribu_1 = __importDefault(require("../models/tribu"));
-const sequelize_1 = require("sequelize");
-const json2csv_1 = require("json2csv");
-const organizacion_1 = __importDefault(require("../models/organizacion"));
+const db_validators_1 = require("../helpers/db-validators");
 const obtenerRepositoriosPorTribu = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { idTribu } = req.params;
     const existeTribu = yield tribu_1.default.findByPk(idTribu);
@@ -27,41 +24,7 @@ const obtenerRepositoriosPorTribu = (req, res) => __awaiter(void 0, void 0, void
             msg: `La Tribu  ${idTribu} no se encuentra registrada`
         });
     }
-    const repositorios = yield repositorio_1.default.findAll({
-        raw: true,
-        attributes: ['id',
-            'name',
-            [sequelize_1.Sequelize.literal("CASE WHEN \"state\" = 'E' THEN 'Enable' WHEN \"state\" = 'D' THEN 'Disable' ELSE 'Archived' END"), 'state'],
-            'codigoVerificacion',
-            [sequelize_1.Sequelize.literal("CASE WHEN  \"codigoVerificacion\" = 604 THEN 'Verificado' WHEN  \"codigoVerificacion\" = 605 THEN 'En Espera' ELSE 'Aprobado' END"), 'codigoVerificacion'],
-        ],
-        where: {
-            tribusId: idTribu,
-            state: 'E',
-            create_time: {
-                [sequelize_1.Op.gte]: '2022/01/01',
-            }
-        },
-        include: [
-            {
-                model: metrica_1.default,
-                attributes: ['coverage', 'bugs', 'vulnerabilities', 'hotspot', 'codeSmeell'],
-                where: {
-                    coverage: {
-                        [sequelize_1.Op.gte]: 75,
-                    },
-                }
-            }, {
-                model: tribu_1.default, as: "Tribu",
-                attributes: [['name', 'tribu']],
-                include: [{
-                        model: organizacion_1.default, as: "Organizacion",
-                        attributes: [['name', 'Organizacion']],
-                    },]
-            },
-        ],
-    });
-    console.log(repositorios);
+    const repositorios = yield (0, db_validators_1.obtenerReposPorTribu)(idTribu);
     if (!(repositorios.length === 0)) {
         res.status(200).json({
             repositorios
@@ -123,24 +86,4 @@ const putMetrica = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.putMetrica = putMetrica;
-const getDownload = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = [
-        {
-            key: 'value',
-            key2: 'value2'
-        },
-        {
-            key: 'value3',
-            key2: 'value4'
-        }
-    ];
-    const fields = ['key', 'key2'];
-    const fileName = 'prueba.csv';
-    const json2csv = new json2csv_1.Parser({ fields });
-    const csv = json2csv.parse(data);
-    res.header('Content-Type', 'text/csv');
-    res.attachment(fileName);
-    return res.send(csv);
-});
-exports.getDownload = getDownload;
 //# sourceMappingURL=metricas.controller.js.map

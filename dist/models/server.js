@@ -17,6 +17,7 @@ const repositorios_routes_1 = __importDefault(require("../routes/repositorios.ro
 const organizaciones_routes_1 = __importDefault(require("../routes/organizaciones.routes"));
 const tribus_routes_1 = __importDefault(require("../routes/tribus.routes"));
 const metricas_routes_1 = __importDefault(require("../routes/metricas.routes"));
+const downloads_routes_1 = __importDefault(require("../routes/downloads.routes"));
 const cors_1 = __importDefault(require("cors"));
 const connection_1 = __importDefault(require("../db/connection"));
 class Server {
@@ -25,7 +26,8 @@ class Server {
             organizaciones: '/api/organizaciones',
             tribus: '/api/tribus',
             repositorios: '/api/repositorios',
-            metricas: '/api/metricas'
+            metricas: '/api/metricas',
+            download: '/api/downloads',
         };
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || '3000';
@@ -59,7 +61,8 @@ class Server {
         this.app.use(this.apiPaths.organizaciones, organizaciones_routes_1.default),
             this.app.use(this.apiPaths.tribus, tribus_routes_1.default),
             this.app.use(this.apiPaths.repositorios, repositorios_routes_1.default),
-            this.app.use(this.apiPaths.metricas, metricas_routes_1.default);
+            this.app.use(this.apiPaths.metricas, metricas_routes_1.default),
+            this.app.use(this.apiPaths.download, downloads_routes_1.default);
     }
     listen() {
         this.app.listen(this.port, () => {

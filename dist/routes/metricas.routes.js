@@ -21,6 +21,5 @@ router.put('/:id', [
     (0, express_validator_1.body)('repositorioId').custom((repositorioId) => (0, db_validators_1.validaIdRepositorio)(repositorioId)),
     validaCampos_1.validarCampos
 ], metricas_controller_1.putMetrica);
-router.get('/', metricas_controller_1.getDownload);
 exports.default = router;
 //# sourceMappingURL=metricas.routes.js.map

@@ -5,11 +5,12 @@ import Tribu from '../models/tribu';
 import { Op, Sequelize } from 'sequelize';
 import { Parser } from 'json2csv';
 import Organizacion from '../models/organizacion';
-
+import { obtenerReposPorTribu } from '../helpers/db-validators';
 
 export const obtenerRepositoriosPorTribu = async (req: Request, res: Response) => {
 
     const { idTribu } = req.params;
+    
 
     const existeTribu = await Tribu.findByPk(idTribu);
 
@@ -19,42 +20,9 @@ export const obtenerRepositoriosPorTribu = async (req: Request, res: Response) =
         })
     }
 
-    const repositorios = await Repositorio.findAll({
-        raw: true, 
-        attributes: ['id',
-            'name',
-            [Sequelize.literal("CASE WHEN \"state\" = 'E' THEN 'Enable' WHEN \"state\" = 'D' THEN 'Disable' ELSE 'Archived' END"), 'state'],
-            'codigoVerificacion',
-            [Sequelize.literal("CASE WHEN  \"codigoVerificacion\" = 604 THEN 'Verificado' WHEN  \"codigoVerificacion\" = 605 THEN 'En Espera' ELSE 'Aprobado' END"), 'codigoVerificacion'],
-        ],
-        where: {
-            tribusId: idTribu,
-            state: 'E',
-            create_time: {
-                [Op.gte]: '2022/01/01',
-            }
-        },
-        include: [
-            {
-                model: Metrica,
-                attributes: ['coverage', 'bugs', 'vulnerabilities', 'hotspot', 'codeSmeell'],
-                where: {
-                    coverage: {
-                        [Op.gte]: 75,
-                    },
-                }
-            }, {
-                model: Tribu, as: "Tribu",
-                attributes: [['name', 'tribu']],
-                include: [{
-                    model: Organizacion, as: "Organizacion",
-                    attributes: [['name', 'Organizacion']],
-                },]
-            },
-        ],
-    });
+    const repositorios = await obtenerReposPorTribu(idTribu);
 
-console.log(repositorios);
+
     if (!(repositorios.length === 0)) {
 
         res.status(200).json({
@@ -138,31 +106,4 @@ export const putMetrica = async (req: Request, res: Response) => {
 
 };
 
-
-export const getDownload = async (req: Request, res: Response) => {
-
-    const data = [
-        {
-            key: 'value',
-            key2: 'value2'
-        },
-        {
-            key: 'value3',
-            key2: 'value4'
-        }
-    ];
-
-    const fields = ['key', 'key2'];
-    const fileName = 'prueba.csv';
-    const json2csv = new Parser({ fields });
-    const csv = json2csv.parse(data);
-
-    res.header('Content-Type', 'text/csv');
-
-    res.attachment(fileName);
-
-    return res.send(csv);
-
-
-};
 

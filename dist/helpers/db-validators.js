@@ -12,10 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validaCodigosVerificacion = exports.validaEstadosPermitidos = exports.validaIdRepositorio = exports.validaNombreRepositorio = exports.validaNombreTribu = exports.validaIdTribu = exports.validaNombreOrganizacion = exports.validaIdOrganizacion = void 0;
+exports.obtenerReposPorTribu = exports.validaCodigosVerificacion = exports.validaEstadosPermitidos = exports.validaIdRepositorio = exports.validaNombreRepositorio = exports.validaNombreTribu = exports.validaIdTribu = exports.validaNombreOrganizacion = exports.validaIdOrganizacion = void 0;
 const organizacion_1 = __importDefault(require("../models/organizacion"));
 const repositorio_1 = __importDefault(require("../models/repositorio"));
 const tribu_1 = __importDefault(require("../models/tribu"));
+const sequelize_1 = require("sequelize");
+const metrica_1 = __importDefault(require("../models/metrica"));
 const validaIdOrganizacion = (idOrganizacion) => __awaiter(void 0, void 0, void 0, function* () {
     if (!!idOrganizacion) {
         if (!isNaN(idOrganizacion)) {
@@ -48,8 +50,8 @@ exports.validaNombreOrganizacion = validaNombreOrganizacion;
 const validaIdTribu = (idTribu) => __awaiter(void 0, void 0, void 0, function* () {
     if (!!idTribu) {
         if (!isNaN(idTribu)) {
-            const organizacion = yield tribu_1.default.findByPk(idTribu);
-            if (!organizacion) {
+            const tribu = yield tribu_1.default.findByPk(idTribu);
+            if (!tribu) {
                 throw new Error(`El ID de la Tribu: ${idTribu} no es válido.`);
             }
             return true;
@@ -135,4 +137,42 @@ const validaCodigosVerificacion = (estadoVerificacion) => __awaiter(void 0, void
     }
 });
 exports.validaCodigosVerificacion = validaCodigosVerificacion;
+const obtenerReposPorTribu = (idTribu) => __awaiter(void 0, void 0, void 0, function* () {
+    const repositorios = yield repositorio_1.default.findAll({
+        raw: true,
+        attributes: ['id',
+            'name',
+            [sequelize_1.Sequelize.literal("CASE WHEN \"state\" = 'E' THEN 'Enable' WHEN \"state\" = 'D' THEN 'Disable' ELSE 'Archived' END"), 'state'],
+            'codigoVerificacion',
+            [sequelize_1.Sequelize.literal("CASE WHEN  \"codigoVerificacion\" = 604 THEN 'Verificado' WHEN  \"codigoVerificacion\" = 605 THEN 'En Espera' ELSE 'Aprobado' END"), 'codigoVerificacion'],
+        ],
+        where: {
+            tribusId: idTribu,
+            state: 'E',
+            create_time: {
+                [sequelize_1.Op.gte]: '2022/01/01',
+            }
+        },
+        include: [
+            {
+                model: metrica_1.default,
+                attributes: ['coverage', 'bugs', 'vulnerabilities', 'hotspot', 'codeSmeell'],
+                where: {
+                    coverage: {
+                        [sequelize_1.Op.gte]: 75,
+                    },
+                }
+            }, {
+                model: tribu_1.default, as: "Tribu",
+                attributes: [['name', 'tribu']],
+                include: [{
+                        model: organizacion_1.default, as: "Organizacion",
+                        attributes: [['name', 'Organizacion']],
+                    },]
+            },
+        ],
+    });
+    return repositorios;
+});
+exports.obtenerReposPorTribu = obtenerReposPorTribu;
 //# sourceMappingURL=db-validators.js.map

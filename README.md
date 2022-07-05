@@ -74,5 +74,14 @@
     Input: ID de la Tribu
 
 ```
+
+### E4: Descarga del archivo csv
+
+```
+    Ingresar a través de un navegador web
+    URL Endpoint: https://api-rest-ts-nodejs.herokuapp.com/api/downloads/idTribu
+    Input: ID de la Tribu
+```
+
 # Documentación EndPoints:
 https://documenter.getpostman.com/view/2432353/UzJFvJKy

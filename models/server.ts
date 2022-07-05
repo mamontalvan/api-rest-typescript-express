@@ -3,6 +3,7 @@ import repositoriosRoutes from '../routes/repositorios.routes';
 import organizacionesRoutes from '../routes/organizaciones.routes';
 import tribusRoutes from '../routes/tribus.routes';
 import metricasRoutes from '../routes/metricas.routes';
+import downloadsRoutes from '../routes/downloads.routes';
 import cors from 'cors';
 import db from '../db/connection';
 
@@ -14,7 +15,8 @@ class Server {
         organizaciones: '/api/organizaciones',
         tribus:'/api/tribus',
         repositorios:'/api/repositorios',
-        metricas:'/api/metricas'
+        metricas:'/api/metricas',
+        download:'/api/downloads',
     };
 
     constructor(){
@@ -54,7 +56,8 @@ class Server {
         this.app.use( this.apiPaths.organizaciones, organizacionesRoutes ),
         this.app.use( this.apiPaths.tribus, tribusRoutes ),
         this.app.use( this.apiPaths.repositorios, repositoriosRoutes ),
-        this.app.use( this.apiPaths.metricas, metricasRoutes )
+        this.app.use( this.apiPaths.metricas, metricasRoutes ),
+        this.app.use( this.apiPaths.download, downloadsRoutes )
         
     }
 
