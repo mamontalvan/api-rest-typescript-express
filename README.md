@@ -1,7 +1,7 @@
 
 # Descripción:
 
-El presente proyecto fue implementado con Typescript y base de datos [CockroachDb](https://www.cockroachlabs.com/), empleando Sequelize para la persistencia hacia la BD.
+El presente proyecto fue implementado con Typescript y base de datos [CockroachDb](https://www.cockroachlabs.com/), empleando Sequelize para la persistencia hacia la BD. Los endpoints deben ser probados con Postman, Insomnia, entre otros.
 
 Dado el siguiente modelo de datos, responder a los ejercicios siguientes:
 
